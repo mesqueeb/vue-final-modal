@@ -7,22 +7,51 @@ version: 2
 badge: v2.0.0+
 ---
 
-This feature let you create modal dynamically.
+Vue Final Modal has a helper function to dynamically show a modal. This means that you don't have to add the modal to your Vue template and you don't have to use `v-model` to hide or show the modal. You can simply execute `$vfm.show` and pass a modal component as per the example below:
 
-## Add `ModalsContainer`
+```js
+import { $vfm } from 'vue-final-modal'
 
-All dynamic modals will be displayed in `ModalsContainer`. You can get all dynamic modal instances by [$vfm.dynamicModals](#dynamicmodals).
-
-```html[App.vue]
-<div>
-  ...
-  <modals-container></modals-container>
-</div>
+$vfm.show({ component: 'MyDynamicModal' })
 ```
+
+The component `MyDynamicModal` is hypothetical, check the [Examples](#examples) below for an accurate example.
+
+## Prerequisite
+
+As a requirement to using Dynamic modals you must add `<ModalsContainer />` to your main `App.vue` file like so:
+
+<sfc-view>
+
+```vue[App.vue]
+<template>
+  <div>
+    ...
+    <modals-container></modals-container>
+  </div>
+</template>
+```
+
+```vue[App.vue]
+<script>
+import { ModalsContainer } from 'vue-final-modal'
+
+export default {
+  components: {
+    ModalsContainer
+  }
+}
+</script>
+```
+
+</sfc-view>
+
+
+`ModalsContainer` is an invisible Vue component that is responsible for hosting the Vue instances of your dynamic modals. You don't need to do add anything else to the `ModalsContainer`, as long as you include it in your Vue tree, you can use Dynamic modals.
 
 ## API
 
-### `show(dynamicModalOptions, params)`
+### `$vfm.show(dynamicModalOptions, params)`
 
 - Type: `Function`,
 - Arguments:
@@ -47,9 +76,10 @@ All dynamic modals will be displayed in `ModalsContainer`. You can get all dynam
 - Returns: `Promise<Object>` | `Promise<Array>`
 
 To show dynamic modal you can use the API `$vfm.show` function.
-### `dynamicModals`
 
-- Return: 
+### `$vfm.dynamicModals`
+
+- Type: 
   - `Array`: returns dynamic modal instances.
 - Examples:
   - get the first created dynamic modal instance
@@ -92,6 +122,34 @@ export default {
 ```
 
 </sfc-view>
+
+#### Register `modals-container` in `App.vue` for modal container.
+
+<sfc-view>
+
+```vue[App.vue]
+<template>
+  <div>
+    ...
+    <modals-container></modals-container>
+  </div>
+</template>
+```
+
+```vue[App.vue]
+<script>
+import { ModalsContainer } from 'vue-final-modal'
+
+export default {
+  components: {
+    ModalsContainer
+  }
+}
+</script>
+```
+
+</sfc-view>
+
 
 #### VDynamicModal.vue
 
@@ -181,12 +239,12 @@ export default {
   methods: {
     dynamic() {
       this.$vfm.show({
-        component: 'VModal',
+        component: 'CustomModal',
         bind: {
           name: 'VDynamicAdvacedModal'
         },
         on: {
-          // event by v-modal
+          // event by custom-modal
           confirm(close) {
             console.log('confirm')
             close()
@@ -236,9 +294,37 @@ export default {
 
 </sfc-view>
 
-#### VModal.vue
+#### Register `modals-container` in `App.vue` for modal container.
 
-<alert>VModal is an HOC of vue-final-modal.</alert>
+<sfc-view>
+
+```vue[App.vue]
+<template>
+  <div>
+    ...
+    <modals-container></modals-container>
+  </div>
+</template>
+```
+
+```vue[App.vue]
+<script>
+import { ModalsContainer } from 'vue-final-modal'
+
+export default {
+  components: {
+    ModalsContainer
+  }
+}
+</script>
+```
+
+</sfc-view>
+
+
+#### CustomModal.vue
+
+<alert>Write an HOC called `CustomModal` base on `VueFinalModal` in vue-final-modal.</alert>
 
 > [See recommend usage](/examples/recommend)
 
@@ -268,7 +354,7 @@ export default {
 ```vue
 <script>
 export default {
-  name: 'VModal',
+  name: 'CustomModal',
   inheritAttrs: false,
   methods: {
     close() {
